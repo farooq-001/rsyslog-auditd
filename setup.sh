@@ -124,9 +124,9 @@ TS=$(date +%Y%m%d-%H%M%S)
 [[ -f "$AUDIT_RULES" ]] && mv "$AUDIT_RULES" "$BACKUP_DIR/audit.rules.$TS"
 [[ -f "$AUDIT_CONF" ]] && mv "$AUDIT_CONF" "$BACKUP_DIR/auditd.conf.$TS"
 # Download files quietly
-curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/50-rsyslog-log-forward.conf" -o "$RSYSLOG_CONF"
-curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/audit.conf" -o "$AUDIT_CONF"
-curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/audit.rules" -o "$AUDIT_RULES"
+curl -s -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/50-rsyslog-log-forward.conf" -o "$RSYSLOG_CONF"
+curl -s -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/audit.conf" -o "$AUDIT_CONF"
+curl -s -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/audit.rules" -o "$AUDIT_RULES"
 
 if [[ ! -f "$RSYSLOG_CONF" ]]; then
   echo "Config file $RSYSLOG_CONF does not exist after download."
@@ -270,7 +270,7 @@ if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04
     [ -f "$AUDIT_CONF" ] && sudo cp "$AUDIT_CONF" "$AUDIT_CONF.bak.$(date +%Y%m%d_%H%M%S)"
 
     # Download and replace
-    curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
+    curl -s -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
     
     # Restart rsyslog and auditd services
     systemctl daemon-reload
