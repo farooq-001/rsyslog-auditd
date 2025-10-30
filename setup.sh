@@ -169,8 +169,8 @@ fi
 ########################################
 # Check if the OS is Ubuntu
 ########################################
-if [ "$OS" = "ubuntu" ]; then
-    echo "Ubuntu detected. Running AppArmor update script..."
+if [[ "$OS" == "ubuntu" && "$VERSION_ID" == "24.04" ]]; then    
+echo "Ubuntu detected. Running AppArmor update script..."
 
     # Define the AppArmor profile file
     APPARMOR_PROFILE="/etc/apparmor.d/usr.sbin.rsyslogd"
