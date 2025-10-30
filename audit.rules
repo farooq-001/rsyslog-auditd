@@ -1,7 +1,7 @@
 #########################################################
 ## Linux Auditd configuration with MITRE ATT&CK Tagging
-## Author: BluSapphire
-## Created: 04/09/2025
+## Author: SNB-TECH
+## Created: 30/10/2025
 #########################################################
 
 # Remove any existing rules
