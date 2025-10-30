@@ -274,6 +274,7 @@ if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04
     curl -sSL "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
     
     # Restart rsyslog and auditd services
+    sed -i 's/^#$WorkDirectory.*/$WorkDirectory \/var\/spool\/rsyslog/' /etc/rsyslog.d/50-rsyslog-log-forward.conf
     systemctl daemon-reload
     systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
 
