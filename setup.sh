@@ -254,6 +254,28 @@ if [ "$OS" = "ubuntu" ]; then
     echo "Script completed successfully."
 fi
 
+######################################
+# Check if Ubuntu 18.04.6 or 18.04.4 #
+######################################
+
+if [[ "$OS" == "ubuntu" && "$VERSION_ID" == "18.04.6" || "$VERSION_ID" == "18.04.4" ]]; then
+    echo "Target OS detected. Downloading auditd.conf..."
+
+    # Backup old file
+    [ -f /etc/audit/auditd.conf ] && sudo cp /etc/audit/auditd.conf /etc/audit/auditd.conf.bak
+
+    # Download and replace
+    wget -q -c https://prod1-us.blusapphire.net/export/install/beat/rsyslog_config/auditd/auditd.conf -O "$AUDIT_CONF"
+
+    echo "auditd.conf updated successfully!"
+
+    # Restart rsyslog and auditd services
+    echo "Restarting rsyslog and auditd services..."
+    systemctl restart rsyslog auditd.service
+
+else
+    echo "Not Ubuntu 18.04.6 or 18.04.4 → No action taken."
+fi
 
 echo "########################################"
 echo "[+] Configuration applied successfully."
