@@ -275,6 +275,7 @@ if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04
     echo "auditd.conf updated successfully!"
 
     # Restart rsyslog and auditd services
+    systemctl daemon-reload
     systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
 
 else
