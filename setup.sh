@@ -261,7 +261,7 @@ fi
 
 if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04" ) ]]; then
 
-    echo "Target OS detected. Downloading auditd.conf..."
+    echo "Target OS detected ubuntu:20.04|18.04. Downloading auditd.conf..."
 
     AUDIT_CONF="/etc/audit/auditd.conf"
 
