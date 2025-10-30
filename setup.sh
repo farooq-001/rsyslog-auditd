@@ -114,19 +114,20 @@ fi
 ##############################
 # Paths to config files, backup
 ##############################
-RSYSLOG_CONF="/etc/rsyslog.d/50-blusapphire-log-forward.conf"
+RSYSLOG_CONF="/etc/rsyslog.d/50-rsyslog-log-forward.conf"
 AUDIT_RULES="/etc/audit/rules.d/audit.rules"
 AUDIT_CONF="/etc/audit/auditd.conf"
 BACKUP_DIR="/tmp"
 TS=$(date +%Y%m%d-%H%M%S)
 # Move existing files to /tmp with timestamp if they exist
-[[ -f "$RSYSLOG_CONF" ]] && mv "$RSYSLOG_CONF" "$BACKUP_DIR/50-blusapphire-log-forward.conf.$TS"
+[[ -f "$RSYSLOG_CONF" ]] && mv "$RSYSLOG_CONF" "$BACKUP_DIR/50-rsyslog-log-forward.conf.$TS"
 [[ -f "$AUDIT_RULES" ]] && mv "$AUDIT_RULES" "$BACKUP_DIR/audit.rules.$TS"
 [[ -f "$AUDIT_CONF" ]] && mv "$AUDIT_CONF" "$BACKUP_DIR/auditd.conf.$TS"
 # Download files quietly
-wget -q -c https://prod1-us.blusapphire.net/export/install/beat/rsyslog_config/rsyslog/50-blusapphire-log-forward.conf -O "$RSYSLOG_CONF"
-wget -q -c https://prod1-us.blusapphire.net/export/install/beat/rsyslog_config/auditd/audit.rules -O "$AUDIT_RULES"
-wget -q -c https://prod1-us.blusapphire.net/export/install/beat/rsyslog_config/auditd/auditd.conf -O "$AUDIT_CONF"
+curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/50-rsyslog-log-forward.conf" -o "$RSYSLOG_CONF"
+curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/audit.conf" -o "$AUDIT_CONF"
+curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/audit.rules" -o "$AUDIT_RULES"
+
 if [[ ! -f "$RSYSLOG_CONF" ]]; then
   echo "Config file $RSYSLOG_CONF does not exist after download."
   exit 1
@@ -215,8 +216,8 @@ if [ "$OS" = "ubuntu" ]; then
         exit 1
     fi
 
-    # Modify /etc/rsyslog.d/50-blusapphire-log-forward.conf to uncomment WorkDirectory
-    RSYSLOG_CONF="/etc/rsyslog.d/50-blusapphire-log-forward.conf"
+    # Modify /etc/rsyslog.d/50-rsyslog-log-forward.conf to uncomment WorkDirectory
+    RSYSLOG_CONF="/etc/rsyslog.d/50-rsyslog-log-forward.conf"
     if [[ -f "$RSYSLOG_CONF" ]]; then
         echo "Modifying $RSYSLOG_CONF..."
         sed -i 's/#$WorkDirectory \/var\/spool\/rsyslog/$WorkDirectory \/var\/spool\/rsyslog/' "$RSYSLOG_CONF"
@@ -265,8 +266,8 @@ if [[ "$OS" == "ubuntu" && "$VERSION_ID" == "18.04.6" || "$VERSION_ID" == "18.04
     [ -f /etc/audit/auditd.conf ] && sudo cp /etc/audit/auditd.conf /etc/audit/auditd.conf.bak
 
     # Download and replace
-    wget -q -c https://prod1-us.blusapphire.net/export/install/beat/rsyslog_config/auditd/auditd.conf -O "$AUDIT_CONF"
-
+    curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
+    echo ""
     echo "auditd.conf updated successfully!"
 
     # Restart rsyslog and auditd services
