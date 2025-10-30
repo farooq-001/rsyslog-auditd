@@ -261,6 +261,7 @@ fi
 
 if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04" ) ]]; then
 
+    echo "" 
     echo "Target OS detected ubuntu:20.04|18.04. Downloading auditd.conf..."
 
     AUDIT_CONF="/etc/audit/auditd.conf"
@@ -271,9 +272,6 @@ if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04
     # Download and replace
     curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
     
-    echo ""
-    echo "auditd.conf updated successfully!"
-
     # Restart rsyslog and auditd services
     systemctl daemon-reload
     systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
