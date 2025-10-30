@@ -256,26 +256,33 @@ if [ "$OS" = "ubuntu" ]; then
 fi
 
 ######################################
-# Check if Ubuntu 18.04.6 or 18.04.4 #
+# Check if Ubuntu 18.04.6, 18.04.4 or 20.04.6
 ######################################
+echo ""
+echo "######################################"
+echo "# Check if Ubuntu 18.04.6 or 18.04.4 or 20.04.6 #"
+echo "######################################"
 
-if [[ "$OS" == "ubuntu" && "$VERSION_ID" == "18.04.6" || "$VERSION_ID" == "18.04.4" ]]; then
+if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04.6" || "$VERSION_ID" == "18.04.4" || "$VERSION_ID" == "20.04.6" ) ]]; then
     echo "Target OS detected. Downloading auditd.conf..."
 
+    AUDIT_CONF="/etc/audit/auditd.conf"
+
     # Backup old file
-    [ -f /etc/audit/auditd.conf ] && sudo cp /etc/audit/auditd.conf /etc/audit/auditd.conf.bak
+    [ -f "$AUDIT_CONF" ] && sudo cp "$AUDIT_CONF" "$AUDIT_CONF.bak.$(date +%Y%m%d_%H%M%S)"
 
     # Download and replace
-    curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
+    sudo curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
+    
     echo ""
     echo "auditd.conf updated successfully!"
 
     # Restart rsyslog and auditd services
     echo "Restarting rsyslog and auditd services..."
-    systemctl restart rsyslog auditd.service
+    sudo systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
 
 else
-    echo "Not Ubuntu 18.04.6 or 18.04.4 → No action taken."
+    echo "Not Ubuntu 18.04.6, 18.04.4, or 20.04.6 → No action taken."
 fi
 
 echo "########################################"
