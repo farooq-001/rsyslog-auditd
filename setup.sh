@@ -274,7 +274,7 @@ if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04
     
     # Restart rsyslog and auditd services
     systemctl daemon-reload
-    systemctl stop syslog.socket auditd.service && systemctl start rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
+    systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
 
 else
     echo "Not Ubuntu 18.04.6, 18.04.4, or 20.04.6 → No action taken."
