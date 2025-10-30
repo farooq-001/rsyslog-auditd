@@ -263,7 +263,8 @@ echo "######################################"
 echo "# Check if Ubuntu 18.04.6 or 18.04.4 or 20.04.6 #"
 echo "######################################"
 
-if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04.6" || "$VERSION_ID" == "18.04.4" || "$VERSION_ID" == "20.04.6" ) ]]; then
+if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04" ) ]]; then
+
     echo "Target OS detected. Downloading auditd.conf..."
 
     AUDIT_CONF="/etc/audit/auditd.conf"
