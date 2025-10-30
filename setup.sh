@@ -269,14 +269,13 @@ if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04
     [ -f "$AUDIT_CONF" ] && sudo cp "$AUDIT_CONF" "$AUDIT_CONF.bak.$(date +%Y%m%d_%H%M%S)"
 
     # Download and replace
-    sudo curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
+    curl -L "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
     
     echo ""
     echo "auditd.conf updated successfully!"
 
     # Restart rsyslog and auditd services
-    echo "Restarting rsyslog and auditd services..."
-    sudo systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
+    systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
 
 else
     echo "Not Ubuntu 18.04.6, 18.04.4, or 20.04.6 → No action taken."
