@@ -284,12 +284,7 @@ fi
     systemctl daemon-reload
     echo "[+] Restarting services..."
     systemctl restart rsyslog
-    kill -9 $(systemctl show -p MainPID auditd.service | cut -d'=' -f2)
     systemctl restart auditd
-    echo "[+] Checking service status..."
-    systemctl is-active --quiet auditd && echo "[OK] auditd is running"
-    systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
-
 else
     echo "[+] auditctl version ($VERSION) does not match required version ($TARGET_VERSION). Skipping update."
 fi
