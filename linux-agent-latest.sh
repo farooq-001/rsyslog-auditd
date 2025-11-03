@@ -259,16 +259,14 @@ fi
 ##################################################
 #   Check if Auditd version 2.8.5                #
 ###################################################
-
-# Get current auditctl version
 VERSION=$(auditctl -v | awk '{print $3}')
-# Target version to check
 TARGET_VERSION="2.8.5"
 
 # Compare and run update if version matches
 if [ "$VERSION" = "$TARGET_VERSION" ]; then
+    echo ""
     echo "✅ auditctl version $VERSION detected — proceeding with configuration update."
-
+    echo ""
     AUDIT_CONF="/etc/audit/auditd.conf"
 
     # Backup old file
