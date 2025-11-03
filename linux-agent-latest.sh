@@ -285,5 +285,5 @@ else
 fi
 
 echo "########################################"
-echo "[+] Configuration applied successfully."
+echo "✅ Configuration applied successfully  "
 echo "########################################"
