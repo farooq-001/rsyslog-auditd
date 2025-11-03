@@ -4,7 +4,7 @@
 ##################
 if [ "$USER" != "root" ]; then
     echo ""
-    echo 'Invalid User!!! Please login as root and rerun the script.'
+    echo "⚠️ Invalid User!!! Please login as root and rerun the script."
     echo ""
     exit 0
 fi
@@ -19,7 +19,7 @@ if [[ $? -eq 0 ]]; then
 else
     echo " Offline."
     echo ""
-    echo "Check internet access and rerun script. Terminating Script!"
+    echo "⚠️ Check internet access and rerun script. Terminating Script!"
     exit 1
 fi
 echo "#########################"
@@ -31,10 +31,12 @@ if [ -f /etc/os-release ]; then
     VERSION_ID=$VERSION_ID
     OS_FLAVOR="$PRETTY_NAME"
 else
-    echo "Cannot detect OS. /etc/os-release not found."
+    echo "⚠️ Cannot detect OS. /etc/os-release not found."
     exit 1
 fi
-echo "Detected OS: $OS_FLAVOR"
+echo ""
+echo "🐧 Detected OS: $OS_FLAVOR"
+echo ""
 # Check rsyslog and auditd services
 for svc in rsyslog auditd; do
     if ! systemctl list-unit-files | grep -q "^${svc}.service"; then
@@ -73,7 +75,7 @@ case $OS in
         install_ubuntu
         ;;
     *)
-        echo "Unsupported OS: $OS_FLAVOR"
+        echo "⚠️ Unsupported OS: $OS_FLAVOR"
         exit 1
         ;;
 esac
@@ -92,7 +94,7 @@ if ! command -v wget >/dev/null 2>&1; then
     elif [[ "$OS" == "ubuntu" ]]; then
         apt install -y wget
     else
-        echo "Unsupported OS for wget installation"
+        echo "⚠️ Unsupported OS for wget installation"
         exit 1
     fi
 fi
