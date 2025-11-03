@@ -4,7 +4,7 @@
 ##################
 if [ "$USER" != "root" ]; then
     echo ""
-    echo "⚠️ Invalid User!!! Please login as root and rerun the script."
+    echo "⚠️  Invalid User!!! Please login as root and rerun the script."
     echo ""
     exit 0
 fi
@@ -19,7 +19,7 @@ if [[ $? -eq 0 ]]; then
 else
     echo " Offline."
     echo ""
-    echo "⚠️ Check internet access and rerun script. Terminating Script!"
+    echo "⚠️  Check internet access and rerun script. Terminating Script!"
     exit 1
 fi
 echo "#########################"
@@ -31,7 +31,7 @@ if [ -f /etc/os-release ]; then
     VERSION_ID=$VERSION_ID
     OS_FLAVOR="$PRETTY_NAME"
 else
-    echo "⚠️ Cannot detect OS. /etc/os-release not found."
+    echo "⚠️  Cannot detect OS. /etc/os-release not found."
     exit 1
 fi
 echo ""
