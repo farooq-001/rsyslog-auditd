@@ -135,7 +135,7 @@ if [[ ! -f "$RSYSLOG_CONF" ]]; then
 fi
 # Replace <LOG_COLLECTOR_IP> quietly
 sed -i "s|<LOG_COLLECTOR_IP>|$LOG_COLLECTOR_IP|g" "$RSYSLOG_CONF"
-echo "Config Files Updated successfully."
+echo "[+] Config Files Updated successfully."
 echo "1.$RSYSLOG_CONF"
 echo "2.$AUDIT_RULES"
 echo "3.$AUDIT_CONF"
@@ -281,7 +281,7 @@ if [ "$VERSION" = "$TARGET_VERSION" ]; then
     systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
 
 else
-    echo "⚠️  auditctl version ($VERSION) does not match required version ($TARGET_VERSION). Skipping update."
+    echo "[+] auditctl version ($VERSION) does not match required version ($TARGET_VERSION). Skipping update."
 fi
 
 echo "########################################"
