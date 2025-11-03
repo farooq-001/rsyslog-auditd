@@ -257,13 +257,17 @@ echo "Ubuntu detected. Running AppArmor update script..."
 fi
 
 ##################################################
-#   Check if Ubuntu 18.04.6 or 18.04.4 or 20.04.6 #
+#   Check if Auditd version 2.8.5                #
 ###################################################
 
-if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04" ) ]]; then
+# Get current auditctl version
+VERSION=$(auditctl -v | awk '{print $3}')
+# Target version to check
+TARGET_VERSION="2.8.5"
 
-    echo "" 
-    echo "Target OS detected ubuntu:20.04|18.04. Downloading auditd.conf..."
+# Compare and run update if version matches
+if [ "$VERSION" = "$TARGET_VERSION" ]; then
+    echo "✅ auditctl version $VERSION detected — proceeding with configuration update."
 
     AUDIT_CONF="/etc/audit/auditd.conf"
 
@@ -279,7 +283,7 @@ if [[ "$OS" == "ubuntu" && ( "$VERSION_ID" == "18.04" || "$VERSION_ID" == "20.04
     systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
 
 else
-    echo "Not Ubuntu 18.04.6, 18.04.4, or 20.04.6 → No action taken."
+    echo "⚠️  auditctl version ($VERSION) does not match required version ($TARGET_VERSION). Skipping update."
 fi
 
 echo "########################################"
