@@ -159,25 +159,22 @@ systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
 ###############################################
 # SELinux config for RHEL and CentOS Stream 10
 ###############################################
-#if [[ "$OS" == "rhel" || "$OS" == "centos" ]]; then
-#    echo "[+] Applying RHEL/CentOS-specific SELinux policy for rsyslog..."
-#    dnf install -y policycoreutils-python-utils
-#    ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
-#    semodule -i rsyslog_audit_access.pp
-#    semanage permissive -a syslogd_t
-#    systemctl restart rsyslog
-#fi
-
-
 if [[ ("$OS" == "rhel" || "$OS" == "centos") && "$VERSION_ID" != "7" ]]; then
-    echo "[+] Applying RHEL/CentOS-specific SELinux policy for rsyslog..."
+    echo "[+] Applying RHEL/CentOS 8/9 specific SELinux policy for rsyslog..."
     dnf install -y policycoreutils-python-utils
     ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
     semodule -i rsyslog_audit_access.pp
     semanage permissive -a syslogd_t
     systemctl restart rsyslog
-fi
 
+elif [[ ("$OS" == "rhel" || "$OS" == "centos") && "$VERSION_ID" == "7" ]]; then
+    echo "[+] Applying CentOS 7 specific SELinux policy for rsyslog..."
+    yum install -y policycoreutils-python
+    ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
+    semodule -i rsyslog_audit_access.pp
+    semanage permissive -a syslogd_t
+    systemctl restart rsyslog
+fi
 
 ########################################
 # Check if the OS is Ubuntu
@@ -289,22 +286,17 @@ if [ "$VERSION" = "$TARGET_VERSION" ]; then
     curl -sSL "https://raw.githubusercontent.com/farooq-001/rsyslog-auditd/master/auditd-18.conf" -o "$AUDIT_CONF"
     
     # Restart rsyslog and auditd services
-    sed -i 's/^#$WorkDirectory.*/$WorkDirectory \/var\/spool\/rsyslog/' /etc/rsyslog.d/50-rsyslog-log-forward.conf
+if [[ ! ("$OS" == "centos" && "$VERSION_ID" == "7") ]]; then 
+sed -i 's/^#$WorkDirectory.*/$WorkDirectory \/var\/spool\/rsyslog/' /etc/rsyslog.d/50-rsyslog-log-forward.conf;
+fi    
     systemctl daemon-reload
-
     echo "[+] Restarting services..."
     systemctl restart rsyslog
-    kill -9 $(systemctl show -p MainPID --value auditd.service)
+    kill -9 $(systemctl show -p MainPID auditd.service | cut -d'=' -f2)
     systemctl restart auditd
-if [ $? -eq 4 ]; then
-    service auditd reload
-    pint=$?
-    echo "Reload command exit code: $pint"
-    echo "print value: $pint"
-fi
-echo "[+] Checking service status..."
-systemctl is-active --quiet auditd && echo "[OK] auditd is running"
-systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
+    echo "[+] Checking service status..."
+    systemctl is-active --quiet auditd && echo "[OK] auditd is running"
+    systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
 
 else
     echo "[+] auditctl version ($VERSION) does not match required version ($TARGET_VERSION). Skipping update."
