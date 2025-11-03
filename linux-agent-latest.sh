@@ -291,7 +291,20 @@ if [ "$VERSION" = "$TARGET_VERSION" ]; then
     # Restart rsyslog and auditd services
     sed -i 's/^#$WorkDirectory.*/$WorkDirectory \/var\/spool\/rsyslog/' /etc/rsyslog.d/50-rsyslog-log-forward.conf
     systemctl daemon-reload
-    systemctl restart rsyslog auditd.service 2>/dev/null || echo "Warning: Some services failed to restart."
+
+    echo "[+] Restarting services..."
+    systemctl restart rsyslog
+    kill -9 $(systemctl show -p MainPID --value auditd.service)
+    systemctl restart auditd
+if [ $? -eq 4 ]; then
+    service auditd reload
+    pint=$?
+    echo "Reload command exit code: $pint"
+    echo "print value: $pint"
+fi
+echo "[+] Checking service status..."
+systemctl is-active --quiet auditd && echo "[OK] auditd is running"
+systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
 
 else
     echo "[+] auditctl version ($VERSION) does not match required version ($TARGET_VERSION). Skipping update."
