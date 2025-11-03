@@ -159,7 +159,17 @@ systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
 ###############################################
 # SELinux config for RHEL and CentOS Stream 10
 ###############################################
-if [[ "$OS" == "rhel" || "$OS" == "centos" ]]; then
+#if [[ "$OS" == "rhel" || "$OS" == "centos" ]]; then
+#    echo "[+] Applying RHEL/CentOS-specific SELinux policy for rsyslog..."
+#    dnf install -y policycoreutils-python-utils
+#    ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
+#    semodule -i rsyslog_audit_access.pp
+#    semanage permissive -a syslogd_t
+#    systemctl restart rsyslog
+#fi
+
+
+if [[ ("$OS" == "rhel" || "$OS" == "centos") && "$VERSION_ID" != "7" ]]; then
     echo "[+] Applying RHEL/CentOS-specific SELinux policy for rsyslog..."
     dnf install -y policycoreutils-python-utils
     ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
@@ -167,6 +177,7 @@ if [[ "$OS" == "rhel" || "$OS" == "centos" ]]; then
     semanage permissive -a syslogd_t
     systemctl restart rsyslog
 fi
+
 
 ########################################
 # Check if the OS is Ubuntu
