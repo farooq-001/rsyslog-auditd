@@ -159,17 +159,9 @@ systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
 ###############################################
 # SELinux config for RHEL and CentOS Stream 10
 ###############################################
-if [[ ("$OS" == "rhel" || "$OS" == "centos") && "$VERSION_ID" != "7" ]]; then
-    echo "[+] Applying RHEL/CentOS 8/9 specific SELinux policy for rsyslog..."
-    dnf install -y policycoreutils-python-utils
-    ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
-    semodule -i rsyslog_audit_access.pp
-    semanage permissive -a syslogd_t
-    systemctl restart rsyslog
-
-elif [[ ("$OS" == "rhel" || "$OS" == "centos") && "$VERSION_ID" == "7" ]]; then
-    echo "[+] Applying CentOS 7 specific SELinux policy for rsyslog..."
-    yum install -y policycoreutils-python
+if [[ "$OS" == "rhel" || "$OS" == "centos" ]]; then
+    echo "[+] Applying RHEL/CentOS-specific SELinux policy for rsyslog..."
+    yum install -y policycoreutils-python && dnf install -y policycoreutils-python-utils
     ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
     semodule -i rsyslog_audit_access.pp
     semanage permissive -a syslogd_t
