@@ -167,22 +167,6 @@ echo "[+] Checking service status..."
 systemctl is-active --quiet auditd && echo "[OK] auditd is running"
 systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
 
-###############################################
-# SELinux config for RHEL/CentOS only         #
-###############################################
-if [[ "$OS" =~ ^(rhel|centos)$ ]]; then
-    echo "[+] Applying SELinux policy..."
-    if command -v dnf >/dev/null 2>&1; then
-        dnf install -y policycoreutils-python-utils
-    else
-        yum install -y policycoreutils-python
-    fi
-    ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
-    semodule -i rsyslog_audit_access.pp
-    semanage permissive -a syslogd_t
-    systemctl restart rsyslog
-fi
-
 ########################################
 # Ubuntu 24.04 AppArmor adjustments    #
 ########################################
@@ -245,6 +229,35 @@ if [ "$VERSION" = "$TARGET_VERSION" ]; then
 else
     echo "[+] auditctl version ($VERSION) does not match required version ($TARGET_VERSION). Skipping version-specific config."
 fi
+
+
+###############################################
+# SELinux config for RHEL and CentOS Stream 10
+###############################################
+
+if [[ ("$OS" == "rhel" || "$OS" == "centos") && "$VERSION_ID" != "7" ]]; then
+    echo "[+] Applying RHEL/CentOS (non–7) specific SELinux policy for rsyslog..."
+    dnf install -y policycoreutils-python-utils
+    ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
+    semodule -i rsyslog_audit_access.pp
+    semanage permissive -a syslogd_t
+    systemctl restart rsyslog
+
+elif [[ "$OS" == "centos" && "$(rpm -E %{rhel})" == "7" ]]; then
+    echo "[+] Applying CentOS 7-specific SELinux policy for rsyslog..."
+    yum install -y policycoreutils-python
+    ausearch -m avc -c rsyslogd --raw | audit2allow -M rsyslog_audit_access
+    semodule -i rsyslog_audit_access.pp
+    semanage permissive -a syslogd_t
+    systemctl restart rsyslog
+fi
+
+echo ""
+echo "[+] Checking status..."
+echo "[+] Detected OS: $OS_FLAVOR"
+systemctl is-active --quiet auditd && echo "[OK] auditd is running- 12513 TCP"
+systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running- 12514 UDP "
+echo ""
 
 echo "########################################"
 echo "✅ Configuration applied successfully  "
