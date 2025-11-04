@@ -146,9 +146,9 @@ fi
 sed -i "s|<LOG_COLLECTOR_IP>|$LOG_COLLECTOR_IP|g" "$RSYSLOG_CONF"
 
 echo "[+] Config Files Updated successfully."
-echo "1. $RSYSLOG_CONF"
-echo "2. $AUDIT_RULES"
-echo "3. $AUDIT_CONF"
+echo "[1] $RSYSLOG_CONF"
+echo "[2] $AUDIT_RULES"
+echo "[3] $AUDIT_CONF"
 echo ""
 
 #############################
