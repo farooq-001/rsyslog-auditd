@@ -207,6 +207,7 @@ fi
 ##################################################
 #   Check Auditd version 2.8.5                   #
 ##################################################
+RSYSLOGVERSION=$( (rsyslogd -v 2>/dev/null || rsyslogd --version 2>/dev/null) | awk '/rsyslogd/{print $2}' )
 VERSION=$(auditctl -v | awk '{print $3}')
 TARGET_VERSION="2.8.5"
 
@@ -255,6 +256,7 @@ fi
 echo ""
 echo "[+] Checking status..."
 echo "[+] Detected OS: $OS_FLAVOR"
+echo "[+] rsyslog version: $RSYSLOGVERSION"
 echo "[+] auditctl version: $VERSION"
 systemctl is-active --quiet auditd && echo "[OK] auditd is running- 12513 TCP"
 systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running- 12514 UDP "
