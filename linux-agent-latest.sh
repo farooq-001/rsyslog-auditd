@@ -164,8 +164,8 @@ fi
 systemctl restart auditd || service auditd reload
 
 echo "[+] Checking service status..."
-systemctl is-active --quiet auditd && echo "[OK] auditd is running"
-systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running"
+systemctl is-active --quiet auditd && echo "[+] auditd is running"
+systemctl is-active --quiet rsyslog && echo "[+] rsyslog is running"
 
 ########################################
 # Ubuntu 24.04 AppArmor adjustments    #
