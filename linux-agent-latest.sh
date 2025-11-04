@@ -255,9 +255,9 @@ fi
 
 echo ""
 echo "[+] Checking status..."
-echo "[+] Detected OS: $OS_FLAVOR"
-echo "[+] rsyslog version: $RSYSLOGVERSION"
 echo "[+] auditctl version: $VERSION"
+echo "[+] rsyslog version: $RSYSLOGVERSION"
+echo "[+] Detected OS: $OS_FLAVOR"
 systemctl is-active --quiet auditd && echo "[OK] auditd is running- 12513 TCP"
 systemctl is-active --quiet rsyslog && echo "[OK] rsyslog is running- 12514 UDP "
 echo ""
