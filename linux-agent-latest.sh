@@ -207,7 +207,7 @@ fi
 ##################################################
 #   Check Auditd version 2.8.5                   #
 ##################################################
-RSYSLOGVERSION=$( (rsyslogd -v 2>/dev/null || rsyslogd --version 2>/dev/null) | awk '/rsyslogd/{print $2}' )
+RSYSLOGVERSION=$( (rsyslogd -v 2>/dev/null || rsyslogd --version 2>/dev/null) | awk '/^rsyslogd /{print $2}' )
 VERSION=$(auditctl -v | awk '{print $3}')
 TARGET_VERSION="2.8.5"
 
